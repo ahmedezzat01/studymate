@@ -1,0 +1,17 @@
+# Build artifacts
+node_modules/
+dist/
+build/
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+
+# Flutter project (not needed for website)
+studymate_code/

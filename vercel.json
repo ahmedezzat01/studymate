@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "public": true,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/presentation", "destination": "/presentation.html" },
+    { "source": "/docs", "destination": "/docs.html" }
+  ]
+}

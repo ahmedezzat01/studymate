@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="StudyMate — A college study group finder Flutter app by Soha, Farah & Shama. HCI3302 final project with full documentation and cinematic presentation." />
+<title>StudyMate — Project Hub · HCI3302</title>
+<style>
+  :root {
+    --primary: #2853D9;
+    --primary-dark: #173A9F;
+    --secondary: #7B2EE6;
+    --cyan: #067FA5;
+    --accent: #00BCD4;
+    --orange: #FFB13B;
+    --danger: #E95757;
+    --text: #f5f7ff;
+    --muted: #a8b3d4;
+    --glass: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.14);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(124, 58, 237, 0.35), transparent 60%),
+      radial-gradient(900px 500px at 0% 100%, rgba(0, 188, 212, 0.25), transparent 60%),
+      linear-gradient(160deg, #0a1130 0%, #1a237e 60%, #0d47a1 100%);
+    min-height: 100%;
+    overflow-x: hidden;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(10, 17, 48, 0.7);
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .nav-inner {
+    max-width: 1200px; margin: 0 auto;
+    padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 800; font-size: 16px;
+    color: var(--text); text-decoration: none;
+  }
+  .logo-mark {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: grid; place-items: center;
+    color: #fff; font-size: 14px;
+    box-shadow: 0 0 18px rgba(43, 91, 222, 0.6);
+  }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a {
+    padding: 6px 12px;
+    color: var(--muted); text-decoration: none;
+    font-size: 13px; border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+  .nav-links a:hover { color: #fff; background: var(--glass); }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 2; }
+
+  /* HERO */
+  .hero {
+    padding: 70px 0 50px;
+    text-align: center;
+  }
+  .eyebrow {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-size: clamp(36px, 6vw, 80px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+  }
+  .grad {
+    background: linear-gradient(120deg, #fff 0%, var(--accent) 50%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .lead {
+    font-size: clamp(15px, 1.7vw, 19px);
+    color: var(--muted);
+    max-width: 720px;
+    margin: 0 auto 30px;
+  }
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    margin-bottom: 36px;
+  }
+  .pill {
+    padding: 8px 16px;
+    background: rgba(40, 83, 217, 0.18);
+    border: 1px solid rgba(40, 83, 217, 0.4);
+    border-radius: 999px;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .pill.alt {
+    background: rgba(0, 188, 212, 0.15);
+    border-color: rgba(0, 188, 212, 0.4);
+    color: var(--accent);
+  }
+
+  /* CTA Buttons */
+  .cta-row {
+    display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
+    margin-bottom: 24px;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 10px 30px rgba(43, 91, 222, 0.4);
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(124, 58, 237, 0.5); }
+  .btn.accent { background: linear-gradient(135deg, var(--accent), var(--primary)); }
+  .btn.ghost {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    box-shadow: none;
+  }
+  .btn.ghost:hover { background: rgba(255,255,255,0.1); }
+
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin: 40px 0;
+  }
+  .stat {
+    text-align: center;
+    padding: 22px 12px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    backdrop-filter: blur(8px);
+  }
+  .stat .n {
+    font-size: clamp(28px, 3.5vw, 38px);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--primary));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat .l {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* Section */
+  section { padding: 60px 0; }
+  section h2 {
+    font-size: clamp(26px, 3.5vw, 42px);
+    font-weight: 800;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+  .section-sub {
+    text-align: center;
+    color: var(--muted);
+    margin: 0 auto 40px;
+    max-width: 700px;
+    font-size: 15px;
+  }
+
+  /* Card grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .card {
+    position: relative;
+    background: linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 28px;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: 0 30px 60px rgba(43, 91, 222, 0.35);
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(43, 91, 222, 0.3), transparent 70%);
+    pointer-events: none;
+  }
+  .card-icon {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: grid; place-items: center;
+    font-size: 26px;
+    margin-bottom: 18px;
+    box-shadow: 0 12px 30px rgba(43, 91, 222, 0.5);
+  }
+  .card h3 {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .card p {
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 18px;
+    font-size: 14px;
+  }
+  .card-features {
+    list-style: none;
+    margin-bottom: 22px;
+  }
+  .card-features li {
+    padding: 4px 0;
+    color: var(--muted);
+    font-size: 13px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .check { color: var(--accent); font-weight: 800; }
+
+  /* Screens preview strip */
+  .preview-strip {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-top: 30px;
+  }
+  .pv {
+    aspect-ratio: 9/19;
+    background: linear-gradient(160deg, #f6f8ff, #e3e8ff);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease;
+  }
+  .pv:hover { transform: translateY(-4px) scale(1.03); }
+  .pv img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+
+  /* Tech pills */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .tech {
+    text-align: center;
+    padding: 24px 16px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+  }
+  .tech-icon { font-size: 36px; margin-bottom: 8px; }
+  .tech-name { font-weight: 800; font-size: 15px; margin-bottom: 4px; }
+  .tech-desc { font-size: 12px; color: var(--muted); }
+
+  /* Footer */
+  footer {
+    padding: 50px 0;
+    text-align: center;
+    border-top: 1px solid var(--glass-border);
+    margin-top: 40px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  footer .team { display: flex; justify-content: center; gap: 16px; margin-bottom: 10px; flex-wrap: wrap; font-size: 14px; }
+  footer .divider { color: var(--glass-border); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .preview-strip { grid-template-columns: repeat(4, 1fr); }
+    .tech-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .preview-strip { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .hero { padding: 50px 0 30px; }
+    section { padding: 40px 0; }
+    .card { padding: 22px; }
+    .cta-row { flex-direction: column; align-items: stretch; }
+    .btn { justify-content: center; }
+  }
+  @media (max-width: 380px) {
+    .preview-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="index.html">
+      <div class="logo-mark">S</div>
+      <span>StudyMate</span>
+    </a>
+    <div class="nav-links">
+      <a href="#preview">Preview</a>
+      <a href="#features">Features</a>
+      <a href="#tech">Tech</a>
+      <a href="presentation.html">Presentation</a>
+      <a href="docs.html">Docs</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="eyebrow">📱 Mobile Application Development · Final Project</div>
+    <h1 class="grad">StudyMate</h1>
+    <p class="lead">
+      A Flutter-based college study group finder. Built with named-routes architecture, real Firebase-ready models, and a complete user journey from onboarding to session rating.
+    </p>
+    <div class="meta">
+      <span class="pill">Soha Abdulrahman</span>
+      <span class="pill">Farah Hussein</span>
+      <span class="pill alt">Shama Al-Dossari</span>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn" href="presentation.html">▶ Watch Presentation</a>
+      <a class="btn accent" href="docs.html">📖 Read Documentation</a>
+      <a class="btn ghost" href="https://www.figma.com/design/IWrIVaFLRjud2FEed8S2wE" target="_blank" rel="noopener">🎨 Open Figma</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">12</div><div class="l">Screens</div></div>
+      <div class="stat"><div class="n">17</div><div class="l">Dart Files</div></div>
+      <div class="stat"><div class="n">6</div><div class="l">Core Features</div></div>
+      <div class="stat"><div class="n">12</div><div class="l">Named Routes</div></div>
+    </div>
+  </section>
+
+  <!-- PREVIEW -->
+  <section id="preview">
+    <h2>See it in Action</h2>
+    <p class="section-sub">All 12 screens designed in Figma, exported to the project folder, and embedded here automatically.</p>
+    <div class="preview-strip" id="previewStrip"></div>
+    <script>
+    const previews = [
+      "01-onboarding", "04-home", "05-discover", "06-group-details",
+      "08-chat", "12-rate-session"
+    ];
+    const strip = document.getElementById('previewStrip');
+    previews.forEach(name => {
+      const div = document.createElement('div');
+      div.className = 'pv';
+      const img = document.createElement('img');
+      img.src = `assets/screens/${name}.png`;
+      img.alt = name;
+      img.loading = 'lazy';
+      img.onerror = () => { div.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))'; div.innerHTML = '<div style="display:grid;place-items:center;height:100%;color:#fff;font-size:24px;">📱</div>'; };
+      div.appendChild(img);
+      strip.appendChild(div);
+    });
+    </script>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <h2>Two Ways to Explore</h2>
+    <p class="section-sub">Choose between the cinematic 12-slide keynote or the complete technical documentation.</p>
+    <div class="grid">
+      <div class="card">
+        <div class="card-icon">🎬</div>
+        <h3>Cinematic Presentation</h3>
+        <p>The 12-slide keynote with 3D animations, particle effects, and the full StudyMate story — from problem to roadmap.</p>
+        <ul class="card-features">
+          <li><span class="check">✓</span> 3D rotating phone mockups with real Figma screens</li>
+          <li><span class="check">✓</span> Animated 6-orbit solution hub &amp; stats</li>
+          <li><span class="check">✓</span> Code highlights with syntax colors</li>
+          <li><span class="check">✓</span> Auto-play &amp; keyboard navigation</li>
+        </ul>
+        <a class="btn" href="presentation.html">▶ Open Presentation</a>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📚</div>
+        <h3>Project Documentation</h3>
+        <p>The complete technical write-up — architecture, all 12 screens, user flow, real code snippets, testing, and roadmap.</p>
+        <ul class="card-features">
+          <li><span class="check">✓</span> Real Flutter code from <code style="color:#fff">studymate_code/lib/</code></li>
+          <li><span class="check">✓</span> 12 screens with Figma previews</li>
+          <li><span class="check">✓</span> sendMessage · ChoiceChip · StarPicker · backToPreviousPage</li>
+          <li><span class="check">✓</span> Full file tree, models, sample data, testing</li>
+        </ul>
+        <a class="btn accent" href="docs.html">📖 Read Documentation</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section id="tech">
+    <h2>Built With</h2>
+    <p class="section-sub">A production-grade stack chosen for performance, scalability, and developer velocity.</p>
+    <div class="tech-grid">
+      <div class="tech">
+        <div class="tech-icon">⚛️</div>
+        <div class="tech-name">Flutter / Dart</div>
+        <div class="tech-desc">Cross-platform mobile · Material 3 · Hot-reload</div>
+      </div>
+      <div class="tech">
+        <div class="tech-icon">🔥</div>
+        <div class="tech-name">Firebase</div>
+        <div class="tech-desc">Auth · Firestore · Cloud Storage · FCM</div>
+      </div>
+      <div class="tech">
+        <div class="tech-icon">🎨</div>
+        <div class="tech-name">Figma</div>
+        <div class="tech-desc">UI/UX design · Prototyping · Design system</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="team">
+      <span>👩‍💻 Soha Abdulrahman</span>
+      <span class="divider">·</span>
+      <span>👩‍💻 Farah Hussein</span>
+      <span class="divider">·</span>
+      <span>👩‍💻 Shama Al-Dossari</span>
+    </div>
+    <div>HCI3302 — Mobile Application Development · Lab Section 12 · 2026</div>
+    <div style="margin-top: 14px; font-size: 12px;">
+      <a href="presentation.html" style="color:var(--accent); text-decoration:none;">▶ Presentation</a>
+      <span class="divider"> · </span>
+      <a href="docs.html" style="color:var(--accent); text-decoration:none;">📖 Documentation</a>
+      <span class="divider"> · </span>
+      <a href="https://www.figma.com/design/IWrIVaFLRjud2FEed8S2wE" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:none;">🎨 Figma</a>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
